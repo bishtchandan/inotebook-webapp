@@ -1,0 +1,25 @@
+const connectToMongo = require('./db');
+const express = require('express')
+var cors = require('cors')
+
+connectToMongo();
+
+const app = express()
+const port = process.env.PORT || 5000;
+
+app.use(cors())
+
+app.use(express.json())
+
+// available routes
+app.use('/api/auth', require('./routes/auth'))
+app.use('/api/notes', require('./routes/notes'))
+
+// 3: step horeku
+if(process.env.NODE_ENV == "production"){
+  app.use(express.static("client/build"));
+}
+
+app.listen(port, () => {
+  console.log(`iNotebook backend listening at http://localhost:${port}`)
+})
